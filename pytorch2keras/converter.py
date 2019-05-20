@@ -145,7 +145,7 @@ def get_leaf_id(node, state={}):
 
 
 def pytorch_to_keras(
-    model, args, input_shapes,
+    model, args, input_names, input_shapes,
     change_ordering=False, training=False, verbose=False, names=False,
 ):
     """
@@ -154,6 +154,7 @@ def pytorch_to_keras(
     Args:
         model: pytorch model
         args: pytorch model arguments
+        input_names: keras input names (using for each InputLayer)
         input_shapes: keras input shapes (using for each InputLayer)
         change_ordering: change CHW to HWC
         training: switch model to training mode
@@ -256,7 +257,7 @@ def pytorch_to_keras(
     keras_inputs = []
     for i in range(len(args)):
         layers[graph_inputs[i]] = tensorflow.keras.layers.InputLayer(
-            input_shape=input_shapes[i], name='input{0}'.format(i)
+            input_shape=input_shapes[i], name=input_names[i]
         ).output
         keras_inputs.append(layers[graph_inputs[i]])
 
