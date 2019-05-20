@@ -1,4 +1,4 @@
-import keras.layers
+import tensorflow.keras.layers
 import numpy as np
 import random
 import string
@@ -38,7 +38,7 @@ def convert_upsample_bilinear(params, w_name, scope_name, inputs, layers, weight
         x = tf.transpose(x, [0, 3, 1, 2])
         return x
 
-    lambda_layer = keras.layers.Lambda(target_layer)
+    lambda_layer = tensorflow.keras.layers.Lambda(target_layer)
     layers[scope_name] = lambda_layer(layers[inputs[0]])
 
 
@@ -72,7 +72,7 @@ def convert_upsample(params, w_name, scope_name, inputs, layers, weights, names)
     elif len(inputs) == 2:
         scale = layers[inputs[-1] + '_np'][-2:]
 
-    upsampling = keras.layers.UpSampling2D(
+    upsampling = tensorflow.keras.layers.UpSampling2D(
         size=scale, name=tf_name
     )
     layers[scope_name] = upsampling(layers[inputs[0]])

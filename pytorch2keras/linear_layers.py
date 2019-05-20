@@ -1,4 +1,4 @@
-import keras.layers
+import tensorflow.keras.layers
 import numpy as np
 import random
 import string
@@ -41,7 +41,7 @@ def convert_gemm(params, w_name, scope_name, inputs, layers, weights, names):
         keras_weights = [W, bias]
         has_bias = True
 
-    dense = keras.layers.Dense(
+    dense = tensorflow.keras.layers.Dense(
         output_channels,
         weights=keras_weights, use_bias=has_bias, name=tf_name, bias_initializer='zeros', kernel_initializer='zeros',
     )
@@ -79,7 +79,7 @@ def convert_matmul(params, w_name, scope_name, inputs, layers, weights, names):
 
         keras_weights = [W]
 
-        dense = keras.layers.Dense(
+        dense = tensorflow.keras.layers.Dense(
             output_channels,
             weights=keras_weights, use_bias=False, name=tf_name, bias_initializer='zeros', kernel_initializer='zeros',
         )
@@ -92,7 +92,7 @@ def convert_matmul(params, w_name, scope_name, inputs, layers, weights, names):
 
         keras_weights = [W]
 
-        dense = keras.layers.Dense(
+        dense = tensorflow.keras.layers.Dense(
             output_channels,
             weights=keras_weights, use_bias=False, name=tf_name, bias_initializer='zeros', kernel_initializer='zeros',
         )

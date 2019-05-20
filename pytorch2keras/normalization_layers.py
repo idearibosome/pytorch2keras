@@ -1,4 +1,4 @@
-import keras.layers
+import tensorflow.keras.layers
 import numpy as np
 import random
 import string
@@ -46,14 +46,14 @@ def convert_batchnorm(params, w_name, scope_name, inputs, layers, weights, names
     momentum = params['momentum']
 
     if weights_name not in weights:
-        bn = keras.layers.BatchNormalization(
+        bn = tensorflow.keras.layers.BatchNormalization(
             axis=1, momentum=momentum, epsilon=eps,
             center=False, scale=False,
             weights=[mean, variance],
             name=tf_name
         )
     else:
-        bn = keras.layers.BatchNormalization(
+        bn = tensorflow.keras.layers.BatchNormalization(
             axis=1, momentum=momentum, epsilon=eps,
             weights=[gamma, beta, mean, variance],
             name=tf_name
@@ -108,7 +108,7 @@ def convert_instancenorm(params, w_name, scope_name, inputs, layers, weights, na
         )
         return layer
 
-    lambda_layer = keras.layers.Lambda(target_layer, name=tf_name)
+    lambda_layer = tensorflow.keras.layers.Lambda(target_layer, name=tf_name)
     layers[scope_name] = lambda_layer(layers[inputs[0]])
 
 
@@ -134,5 +134,5 @@ def convert_dropout(params, w_name, scope_name, inputs, layers, weights, names):
     else:
         tf_name = w_name + str(random.random())
 
-    dropout = keras.layers.Dropout(rate=params['ratio'], name=tf_name)
+    dropout = tensorflow.keras.layers.Dropout(rate=params['ratio'], name=tf_name)
     layers[scope_name] = dropout(layers[inputs[0]])

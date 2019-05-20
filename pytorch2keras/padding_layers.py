@@ -1,4 +1,4 @@
-import keras.layers
+import tensorflow.keras.layers
 import numpy as np
 import random
 import string
@@ -34,7 +34,7 @@ def convert_padding(params, w_name, scope_name, inputs, layers, weights, names):
 
         # Magic ordering
         padding_name = tf_name
-        padding_layer = keras.layers.ZeroPadding2D(
+        padding_layer = tensorflow.keras.layers.ZeroPadding2D(
             padding=((params['pads'][2], params['pads'][6]), (params['pads'][3], params['pads'][7])),
             name=padding_name
         )
@@ -48,5 +48,5 @@ def convert_padding(params, w_name, scope_name, inputs, layers, weights, names):
             # layer = tf.transpose(layer, [0, 3, 1, 2])
             return layer
 
-        lambda_layer = keras.layers.Lambda(target_layer)
+        lambda_layer = tensorflow.keras.layers.Lambda(target_layer)
         layers[scope_name] = lambda_layer(layers[inputs[0]])

@@ -1,4 +1,4 @@
-import keras.layers
+import tensorflow.keras.layers
 import numpy as np
 import random
 import string
@@ -45,7 +45,7 @@ def convert_conv(params, w_name, scope_name, inputs, layers, weights, names):
 
         if params['pads'][0] > 0 or params['pads'][1] > 0:
             padding_name = tf_name + '_pad'
-            padding_layer = keras.layers.ZeroPadding3D(
+            padding_layer = tensorflow.keras.layers.ZeroPadding3D(
                 padding=(params['pads'][0],
                          params['pads'][1],
                          params['pads'][2]),
@@ -59,7 +59,7 @@ def convert_conv(params, w_name, scope_name, inputs, layers, weights, names):
         else:
             weights = [W]
 
-        conv = keras.layers.Conv3D(
+        conv = tensorflow.keras.layers.Conv3D(
             filters=n_filters,
             kernel_size=(channels, height, width),
             strides=(params['strides'][0],
@@ -78,7 +78,7 @@ def convert_conv(params, w_name, scope_name, inputs, layers, weights, names):
     elif len(weights[weights_name].numpy().shape) == 4:  # 2D conv
         if params['pads'][0] > 0 or params['pads'][1] > 0:
             padding_name = tf_name + '_pad'
-            padding_layer = keras.layers.ZeroPadding2D(
+            padding_layer = tensorflow.keras.layers.ZeroPadding2D(
                 padding=(params['pads'][0], params['pads'][1]),
                 name=padding_name
             )
@@ -104,7 +104,7 @@ def convert_conv(params, w_name, scope_name, inputs, layers, weights, names):
             else:
                 weights = [W]
 
-            conv = keras.layers.DepthwiseConv2D(
+            conv = tensorflow.keras.layers.DepthwiseConv2D(
                 kernel_size=(height, width),
                 strides=(params['strides'][0], params['strides'][1]),
                 padding='valid',
@@ -141,7 +141,7 @@ def convert_conv(params, w_name, scope_name, inputs, layers, weights, names):
                 layer = tf.transpose(layer, [0, 3, 1, 2])
                 return layer
 
-            lambda_layer = keras.layers.Lambda(target_layer)
+            lambda_layer = tensorflow.keras.layers.Lambda(target_layer)
             layers[scope_name] = lambda_layer(layers[input_name])
 
         else:
@@ -157,7 +157,7 @@ def convert_conv(params, w_name, scope_name, inputs, layers, weights, names):
             else:
                 weights = [W]
 
-            conv = keras.layers.Conv2D(
+            conv = tensorflow.keras.layers.Conv2D(
                 filters=out_channels,
                 kernel_size=(height, width),
                 strides=(params['strides'][0], params['strides'][1]),
@@ -186,7 +186,7 @@ def convert_conv(params, w_name, scope_name, inputs, layers, weights, names):
             has_bias = False
 
         padding_name = tf_name + '_pad'
-        padding_layer = keras.layers.ZeroPadding1D(
+        padding_layer = tensorflow.keras.layers.ZeroPadding1D(
             padding=params['pads'][0],
             name=padding_name
         )
@@ -198,7 +198,7 @@ def convert_conv(params, w_name, scope_name, inputs, layers, weights, names):
         else:
             weights = [W]
 
-        conv = keras.layers.Conv1D(
+        conv = tensorflow.keras.layers.Conv1D(
             filters=channels,
             kernel_size=width,
             strides=params['strides'],
@@ -264,7 +264,7 @@ def convert_convtranspose(params, w_name, scope_name, inputs, layers, weights, n
         else:
             weights = [W]
 
-        conv = keras.layers.Conv2DTranspose(
+        conv = tensorflow.keras.layers.Conv2DTranspose(
             filters=n_filters,
             kernel_size=(height, width),
             strides=(params['strides'][0], params['strides'][1]),
@@ -288,7 +288,7 @@ def convert_convtranspose(params, w_name, scope_name, inputs, layers, weights, n
         if pads[0] > 0:
             assert(len(pads) == 2 or (pads[2] == pads[0] and pads[3] == pads[1]))
 
-            crop = keras.layers.Cropping2D(
+            crop = tensorflow.keras.layers.Cropping2D(
                 pads[:2],
                 name=tf_name + '_crop'
             )

@@ -1,4 +1,4 @@
-import keras.layers
+import tensorflow.keras.layers
 import numpy as np
 import random
 import string
@@ -52,7 +52,7 @@ def convert_avgpool(params, w_name, scope_name, inputs, layers, weights, names):
         pad = 'same'
     else:
         padding_name = tf_name + '_pad'
-        padding_layer = keras.layers.ZeroPadding2D(
+        padding_layer = tensorflow.keras.layers.ZeroPadding2D(
             padding=(padding_h, padding_w),
             name=padding_name
         )
@@ -60,7 +60,7 @@ def convert_avgpool(params, w_name, scope_name, inputs, layers, weights, names):
         input_name = padding_name
 
     # Pooling type AveragePooling2D
-    pooling = keras.layers.AveragePooling2D(
+    pooling = tensorflow.keras.layers.AveragePooling2D(
         pool_size=(height, width),
         strides=(stride_height, stride_width),
         padding=pad,
@@ -118,7 +118,7 @@ def convert_maxpool(params, w_name, scope_name, inputs, layers, weights, names):
         pad = 'same'
     else:
         padding_name = tf_name + '_pad'
-        padding_layer = keras.layers.ZeroPadding2D(
+        padding_layer = tensorflow.keras.layers.ZeroPadding2D(
             padding=(padding_h, padding_w),
             name=padding_name
         )
@@ -126,7 +126,7 @@ def convert_maxpool(params, w_name, scope_name, inputs, layers, weights, names):
         input_name = padding_name
 
     # Pooling type MaxPooling2D
-    pooling = keras.layers.MaxPooling2D(
+    pooling = tensorflow.keras.layers.MaxPooling2D(
         pool_size=(height, width),
         strides=(stride_height, stride_width),
         padding=pad,
@@ -178,7 +178,7 @@ def convert_maxpool3(params, w_name, scope_name, inputs, layers, weights, names)
     input_name = inputs[0]
     if padding_h > 0 and padding_w > 0 and padding_d > 0:
         padding_name = tf_name + '_pad'
-        padding_layer = keras.layers.ZeroPadding3D(
+        padding_layer = tensorflow.keras.layers.ZeroPadding3D(
             padding=(padding_h, padding_w, padding_d),
             name=padding_name
         )
@@ -186,7 +186,7 @@ def convert_maxpool3(params, w_name, scope_name, inputs, layers, weights, names)
         input_name = padding_name
 
     # Pooling type
-    pooling = keras.layers.MaxPooling3D(
+    pooling = tensorflow.keras.layers.MaxPooling3D(
         pool_size=(height, width, depth),
         strides=(stride_height, stride_width, stride_depth),
         padding='valid',
@@ -218,14 +218,14 @@ def convert_adaptive_avg_pool2d(params, w_name, scope_name, inputs, layers, weig
     else:
         tf_name = w_name + str(random.random())
 
-    global_pool = keras.layers.GlobalAveragePooling2D(data_format='channels_first', name=tf_name)
+    global_pool = tensorflow.keras.layers.GlobalAveragePooling2D(data_format='channels_first', name=tf_name)
     layers[scope_name] = global_pool(layers[inputs[0]])
 
     def target_layer(x):
-        import keras
-        return keras.backend.expand_dims(x)
+        import tensorflow.keras
+        return tensorflow.keras.backend.expand_dims(x)
 
-    lambda_layer = keras.layers.Lambda(target_layer, name=tf_name + 'E')
+    lambda_layer = tensorflow.keras.layers.Lambda(target_layer, name=tf_name + 'E')
     layers[scope_name] = lambda_layer(layers[scope_name])  # double expand dims
     layers[scope_name] = lambda_layer(layers[scope_name])
 
@@ -252,13 +252,13 @@ def convert_adaptive_max_pool2d(params, w_name, scope_name, inputs, layers, weig
     else:
         tf_name = w_name + str(random.random())
 
-    global_pool = keras.layers.GlobalMaxPooling2D(data_format='channels_first', name=tf_name)
+    global_pool = tensorflow.keras.layers.GlobalMaxPooling2D(data_format='channels_first', name=tf_name)
     layers[scope_name] = global_pool(layers[inputs[0]])
 
     def target_layer(x):
-        import keras
-        return keras.backend.expand_dims(x)
+        import tensorflow.keras
+        return tensorflow.keras.backend.expand_dims(x)
 
-    lambda_layer = keras.layers.Lambda(target_layer, name=tf_name + 'E')
+    lambda_layer = tensorflow.keras.layers.Lambda(target_layer, name=tf_name + 'E')
     layers[scope_name] = lambda_layer(layers[scope_name])  # double expand dims
     layers[scope_name] = lambda_layer(layers[scope_name])

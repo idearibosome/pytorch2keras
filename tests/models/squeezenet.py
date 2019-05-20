@@ -1,6 +1,6 @@
 # flake8: noqa
 
-import keras  # work around segfault
+import tensorflow.keras  # work around segfault
 import sys
 import numpy as np
 import math

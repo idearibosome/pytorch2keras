@@ -248,14 +248,14 @@ def pytorch_to_keras(
         print('State dict:', list(state_dict))
 
     import re
-    import keras
+    import tensorflow.keras
     from keras import backend as K
     K.set_image_data_format('channels_first')
 
     layers = dict()
     keras_inputs = []
     for i in range(len(args)):
-        layers[graph_inputs[i]] = keras.layers.InputLayer(
+        layers[graph_inputs[i]] = tensorflow.keras.layers.InputLayer(
             input_shape=input_shapes[i], name='input{0}'.format(i)
         ).output
         keras_inputs.append(layers[graph_inputs[i]])
@@ -319,7 +319,7 @@ def pytorch_to_keras(
         if node_id in graph_outputs:
             outputs.append(layers[node_id])
 
-    model = keras.models.Model(inputs=keras_inputs, outputs=outputs)
+    model = tensorflow.keras.models.Model(inputs=keras_inputs, outputs=outputs)
 
     if change_ordering:
         import numpy as np
@@ -351,9 +351,9 @@ def pytorch_to_keras(
                 layer['config']['axis'] = 3
 
         K.set_image_data_format('channels_last')
-        model_tf_ordering = keras.models.Model.from_config(conf)
+        model_tf_ordering = tensorflow.keras.models.Model.from_config(conf)
 
-        # from keras.utils.layer_utils import convert_all_kernels_in_model
+        # from tensorflow.keras.utils.layer_utils import convert_all_kernels_in_model
         # convert_all_kernels_in_model(model)
 
         for dst_layer, src_layer in zip(

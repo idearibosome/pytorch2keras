@@ -1,4 +1,4 @@
-import keras.layers
+import tensorflow.keras.layers
 import numpy as np
 import random
 import string
@@ -25,10 +25,10 @@ def convert_sum(
     print('Converting Sum ...')
 
     def target_layer(x):
-        import keras.backend as K
+        import tensorflow.keras.backend as K
         return K.sum(x)
 
-    lambda_layer = keras.layers.Lambda(target_layer)
+    lambda_layer = tensorflow.keras.layers.Lambda(target_layer)
     layers[scope_name] = lambda_layer(layers[inputs[0]])
 
 
@@ -51,10 +51,10 @@ def convert_reduce_sum(params, w_name, scope_name, inputs, layers, weights, name
     axis = params['axes']
 
     def target_layer(x, keepdims=keepdims, axis=axis):
-        import keras.backend as K
+        import tensorflow.keras.backend as K
         return K.sum(x, keepdims=keepdims, axis=axis)
 
-    lambda_layer = keras.layers.Lambda(target_layer)
+    lambda_layer = tensorflow.keras.layers.Lambda(target_layer)
     layers[scope_name] = lambda_layer(layers[inputs[0]])
 
 def convert_concat(params, w_name, scope_name, inputs, layers, weights, names):
@@ -85,7 +85,7 @@ def convert_concat(params, w_name, scope_name, inputs, layers, weights, names):
     else:
         tf_name = w_name + str(random.random())
 
-    cat = keras.layers.Concatenate(name=tf_name, axis=params['axis'])
+    cat = tensorflow.keras.layers.Concatenate(name=tf_name, axis=params['axis'])
     layers[scope_name] = cat(concat_nodes)
 
 
@@ -120,7 +120,7 @@ def convert_slice(params, w_name, scope_name, inputs, layers, weights, names):
         elif axis == 3:
             return x[:, :, :, start:end]
 
-    lambda_layer = keras.layers.Lambda(target_layer)
+    lambda_layer = tensorflow.keras.layers.Lambda(target_layer)
     layers[scope_name] = lambda_layer(layers[inputs[0]])
 
 
@@ -141,11 +141,11 @@ def convert_clip(params, w_name, scope_name, inputs, layers, weights, names):
 
     if params['min'] == 0:
         print("using ReLU({0})".format(params['max']))
-        layer = keras.layers.ReLU(max_value=params['max'])
+        layer = tensorflow.keras.layers.ReLU(max_value=params['max'])
     else:
         def target_layer(x, vmin=params['min'], vmax=params['max']):
             import tensorflow as tf
             return tf.clip_by_value(x, vmin, vmax)
-        layer = keras.layers.Lambda(target_layer)
+        layer = tensorflow.keras.layers.Lambda(target_layer)
 
     layers[scope_name] = layer(layers[inputs[0]])

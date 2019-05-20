@@ -1,4 +1,4 @@
-import keras.layers
+import tensorflow.keras.layers
 import numpy as np
 import random
 import string
@@ -28,7 +28,7 @@ def convert_flatten(params, w_name, scope_name, inputs, layers, weights, names):
     else:
         tf_name = w_name + str(random.random())
 
-    reshape = keras.layers.Reshape([-1], name=tf_name)
+    reshape = tensorflow.keras.layers.Reshape([-1], name=tf_name)
     layers[scope_name] = reshape(layers[inputs[0]])
 
 
@@ -57,7 +57,7 @@ def convert_transpose(params, w_name, scope_name, inputs, layers, weights, names
             tf_name = 'PERM' + random_string(4)
         else:
             tf_name = w_name + str(random.random())
-        permute = keras.layers.Permute(params['perm'][1:], name=tf_name)
+        permute = tensorflow.keras.layers.Permute(params['perm'][1:], name=tf_name)
         layers[scope_name] = permute(layers[inputs[0]])
 
 
@@ -86,11 +86,11 @@ def convert_reshape(params, w_name, scope_name, inputs, layers, weights, names):
         if layers[inputs[1]][0] == -1:
             print('Cannot deduct batch size! It will be omitted, but result may be wrong.')
 
-        reshape = keras.layers.Reshape(layers[inputs[1] + '_np'], name=tf_name)
+        reshape = tensorflow.keras.layers.Reshape(layers[inputs[1] + '_np'], name=tf_name)
         layers[scope_name] = reshape(layers[inputs[0]])
     else:
         if inputs[0] in layers:
-            reshape = keras.layers.Reshape(params['shape'][1:], name=tf_name)
+            reshape = tensorflow.keras.layers.Reshape(params['shape'][1:], name=tf_name)
             layers[scope_name] = reshape(layers[inputs[0]])
         else:
             print('Skip weight matrix transpose, but result may be wrong.')
@@ -117,7 +117,7 @@ def convert_squeeze(params, w_name, scope_name, inputs, layers, weights, names):
         import tensorflow as tf
         return tf.squeeze(x, axis=axis)
 
-    lambda_layer = keras.layers.Lambda(target_layer)
+    lambda_layer = tensorflow.keras.layers.Lambda(target_layer)
     layers[scope_name] = lambda_layer(layers[inputs[0]])
 
 
@@ -144,10 +144,10 @@ def convert_unsqueeze(params, w_name, scope_name, inputs, layers, weights, names
         tf_name = w_name + str(random.random())
 
     def target_layer(x):
-        import keras
-        return keras.backend.expand_dims(x)
+        import tensorflow.keras
+        return tensorflow.keras.backend.expand_dims(x)
 
-    lambda_layer = keras.layers.Lambda(target_layer, name=tf_name + 'E')
+    lambda_layer = tensorflow.keras.layers.Lambda(target_layer, name=tf_name + 'E')
     layers[scope_name] = lambda_layer(layers[inputs[0]])
 
 
@@ -170,5 +170,5 @@ def convert_shape(params, w_name, scope_name, inputs, layers, weights, names):
         import tensorflow as tf
         return tf.shape(x)
 
-    lambda_layer = keras.layers.Lambda(target_layer)
+    lambda_layer = tensorflow.keras.layers.Lambda(target_layer)
     layers[scope_name] = lambda_layer(layers[inputs[0]])

@@ -1,4 +1,4 @@
-import keras.layers
+import tensorflow.keras.layers
 import numpy as np
 import random
 import string
@@ -37,7 +37,7 @@ def convert_elementwise_add(
             layer = tf.add(x[0], x[1])
             return layer
 
-        lambda_layer = keras.layers.Lambda(target_layer, name=tf_name)
+        lambda_layer = tensorflow.keras.layers.Lambda(target_layer, name=tf_name)
         layers[scope_name] = lambda_layer([layers[inputs[0]], layers[inputs[1]]])
     else:
         model0 = layers[inputs[0]]
@@ -50,7 +50,7 @@ def convert_elementwise_add(
         else:
             tf_name = w_name + str(random.random())
 
-        add = keras.layers.Add(name=tf_name)
+        add = tensorflow.keras.layers.Add(name=tf_name)
         layers[scope_name] = add([model0, model1])
 
 
@@ -87,7 +87,7 @@ def convert_elementwise_mul(
         )
         return layer
 
-    lambda_layer = keras.layers.Lambda(target_layer, name=tf_name)
+    lambda_layer = tensorflow.keras.layers.Lambda(target_layer, name=tf_name)
     layers[scope_name] = lambda_layer([layers[inputs[0]], layers[inputs[1]]])
 
 
@@ -122,7 +122,7 @@ def convert_elementwise_div(
         )
         return layer
 
-    lambda_layer = keras.layers.Lambda(target_layer, name=tf_name)
+    lambda_layer = tensorflow.keras.layers.Lambda(target_layer, name=tf_name)
     layers[scope_name] = lambda_layer([layers[inputs[0]], layers[inputs[1]]])
 
 
@@ -152,5 +152,5 @@ def convert_elementwise_sub(
     else:
         tf_name = w_name + str(random.random())
 
-    sub = keras.layers.Subtract(name=tf_name)
+    sub = tensorflow.keras.layers.Subtract(name=tf_name)
     layers[scope_name] = sub([model0, model1])

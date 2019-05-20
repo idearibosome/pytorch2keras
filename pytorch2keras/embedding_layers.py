@@ -1,4 +1,4 @@
-import keras.layers
+import tensorflow.keras.layers
 import numpy as np
 import random
 import string
@@ -35,7 +35,7 @@ def convert_gather(params, w_name, scope_name, inputs, layers, weights, names):
 
     keras_weights = [W]
 
-    dense = keras.layers.Embedding(
+    dense = tensorflow.keras.layers.Embedding(
         input_channels,
         weights=keras_weights, output_dim=output_channels, name=tf_name
     )
