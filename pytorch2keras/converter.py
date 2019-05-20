@@ -249,7 +249,7 @@ def pytorch_to_keras(
 
     import re
     import tensorflow.keras
-    from keras import backend as K
+    from tensorflow.keras import backend as K
     K.set_image_data_format('channels_first')
 
     layers = dict()
