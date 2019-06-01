@@ -85,9 +85,12 @@ def convert_reshape(params, w_name, scope_name, inputs, layers, weights, names):
     if len(inputs) > 1:
         if layers[inputs[1]][0] == -1:
             print('Cannot deduct batch size! It will be omitted, but result may be wrong.')
+        
+        def target_layer(x, shape=layers[inputs[1]]):
+            return tensorflow.reshape(x, shape)
 
-        reshape = tensorflow.keras.layers.Reshape(layers[inputs[1] + '_np'], name=tf_name)
-        layers[scope_name] = reshape(layers[inputs[0]])
+        lambda_layer = tensorflow.keras.layers.Lambda(target_layer)
+        layers[scope_name] = lambda_layer(layers[inputs[0]])
     else:
         if inputs[0] in layers:
             reshape = tensorflow.keras.layers.Reshape(params['shape'][1:], name=tf_name)
