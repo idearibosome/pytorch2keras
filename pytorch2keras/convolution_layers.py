@@ -169,6 +169,15 @@ def convert_conv(params, w_name, scope_name, inputs, layers, weights, names):
                 bias_initializer='zeros', kernel_initializer='zeros',
                 name=tf_name
             )
+
+            # specify input channels if necessary
+            layer_shape = layers[input_name].shape.as_list()
+            if (layer_shape[1] == None):
+                layer_shape[1] = W.shape[2]
+                layers[input_name].set_shape(layer_shape)
+                if (hasattr(layers[input_name], '_keras_shape')):
+                    layers[input_name]._keras_shape = tuple(layer_shape)
+            
             layers[scope_name] = conv(layers[input_name])
 
     else:  # 1D conv
