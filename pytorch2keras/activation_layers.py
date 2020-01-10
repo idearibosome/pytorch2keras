@@ -195,3 +195,40 @@ def convert_selu(params, w_name, scope_name, inputs, layers, weights, names):
 
     selu = tensorflow.keras.layers.Activation('selu', name=tf_name)
     layers[scope_name] = selu(layers[inputs[0]])
+
+
+def convert_prelu(params, w_name, scope_name, inputs, layers, weights, names):
+    """
+    Convert parametric relu layer.
+
+   Args:
+        params: dictionary with layer parameters
+        w_name: name prefix in state_dict
+        scope_name: pytorch scope name
+        inputs: pytorch node inputs
+        layers: dictionary with keras tensors
+        weights: pytorch state_dict
+        names: use short names for keras layers
+    """
+    print('Converting prelu ...')
+
+    if names == 'short':
+        tf_name = 'pRELU' + random_string(3)
+    elif names == 'keep':
+        tf_name = w_name
+    else:
+        tf_name = w_name + str(random.random())
+    
+    input_name = inputs[0]
+    weight_name = inputs[1]
+
+    W = layers[weight_name]
+
+    if params['change_ordering']:
+        prelu = \
+            tensorflow.keras.layers.PReLU(weights=[W], shared_axes=[1, 2], name=tf_name)
+        layers[scope_name] = prelu(layers[input_name])
+    else:
+        prelu = \
+            tensorflow.keras.layers.PReLU(weights=[W], shared_axes=[2, 3], name=tf_name)
+        layers[scope_name] = prelu(layers[input_name])
